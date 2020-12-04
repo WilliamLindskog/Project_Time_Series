@@ -1,0 +1,20 @@
+%% Load data
+
+load(fullfile('data20', 'data', 'fjarrvarme89.dat'))
+load(fullfile('data20', 'data', 'fjarrvarme90.dat'))
+
+district_heat = vertcat(fjarrvarme89, fjarrvarme90);
+date = datetime(district_heat(:,5), district_heat(:, 6), district_heat(:, 7), district_heat(:, 8));
+%date = cat(2, date, zeros(size(date,1), 2));
+%date = datestr(date, 'yyyy-mm-dd-HH');
+%date = datenum(date(:, 1), y,m,d,h);
+
+district_heat(:,5:end) = []; % remove date
+
+%% Data plot
+
+figure()
+hold on
+plot(district_heat, date(:,1));
+datetick('x', 'keepticks', 'keeplimits')
+title('District heat during 1989 & 1990')
