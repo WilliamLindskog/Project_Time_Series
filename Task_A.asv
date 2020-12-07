@@ -1,0 +1,40 @@
+%% Loading data
+
+load date.mat
+load train_data.mat
+
+y = train_data(:,1);
+m_y = mean(y);
+y = y - m_y;
+
+u = train_data(:,2);
+m_u = mean(u);
+u = u - mean(u);
+%% Exploring data
+
+basicIdentification(u, 200, 0.05);
+basicIdentification(y, 200, 0.05);
+plotCCF(u, y, 200);
+
+
+%% Modeling the input
+% The input clear 24 hour seasonality
+
+% Removing trend
+A_1 = [1 -1];
+
+u_trend = modFilter(A_1, 1, u);
+
+basicIdentification(u_trend, 200, 0.05);
+
+% Removing seasonality
+A_24 = [1 zeros(1,24)];
+
+model_input_24_init = idpoly(A_24, [], []);
+model_input_24_init.Structure.A.Free = [zeros(1,24) 1];
+
+model_input_24 = pem(u, model_input_24_init);
+rar = resid(u, model_input_24);
+
+present(model_input_24);
+basicIdentification(
