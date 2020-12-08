@@ -38,14 +38,14 @@ train_data = district_heat(start_train:end_train, 2:end); % 8th of July - 15th o
 % Validation data
 %start_validation = end_train + 1; end_validation = start_validation +
 %2*week-1; GAMMAL
-start_validation = end_train + 24*4 + 1; end_validation = start_validation + 2*week-1;
+start_validation = end_train + 1 - 100; end_validation = start_validation + 2*week-1;
 validation_data = district_heat(start_validation:end_validation, 2:end);  % 16th of September - 29th of September (1989)
 
 % Test data set 1 & 2
-start_test1 = end_validation + 1; end_test1 = start_test1 + week-1;
+start_test1 = end_validation + 1 - 100; end_test1 = start_test1 + week-1;
 test_data1 = district_heat(start_test1:end_test1, 2:end);  % 23 of September - 29th of September (1989) 
 
-start_test2 = 4633; end_test2 = start_test2 + week-1;
+start_test2 = 132 - 100; end_test2 = start_test2 + week-1;
 test_data2 = district_heat(start_test2:end_test2, 2:end); % 3rd of February - 10th of February (1990)
 
 %% Plot data splits
