@@ -1,13 +1,13 @@
 %% Loading data
 
 load date.mat
-load train_data2.mat
+load train_data.mat
 
-y = train_data2(:,1);
+y = train_data(:,1);
 m_y = mean(y);
 y = y - m_y;
 
-u = train_data2(:,2);
+u = train_data(:,2);
 m_u = mean(u);
 u = u - mean(u);
 
@@ -80,11 +80,11 @@ basicIdentification(x, 200, 0.05);
 
 A1 = [1 0 0 zeros(1,20) 0 0 0];
 A2 = [1 0 0];
-B = [1 0];
+B = [1 0 0];
 C = 1;
 
 Mi = idpoly(1, B, C, A1, A2);
-Mi.Structure.D.Free = [0 1 1 zeros(1,20) 1 1 1]
+Mi.Structure.D.Free = [0 1 1 zeros(1,20) 1 0 1];
 z = iddata(y, u);
 MboxJ = pem(z, Mi);
 
@@ -104,14 +104,139 @@ plot(ehat.OutputData)
 %% Prediction with k=1
 
 load validation_data.mat
-clearvars -except validation_data MboxJ
+
+y = validation_data(:,1) - m_y;
+u = validation_data(:,2) - m_u;
+model = MboxJ;
 
 k = 1;
-A = MboxJ.A;
-B = MboxJ.B;
-C = 1;
 
-[F, G] = polydiv(C, A, k);
+Ka = conv(model.D, model.F);
+Kb = conv(model.D, model.B);
+Kc = conv(model.F, model.C);
 
+[F, G] = polydiv(Kc, Ka, k);
+BF = conv(Kb, F);
+[Fhat, Ghat] = polydiv(BF, Kc, k);
 
+yhat = filter(Ghat, Kc, u) + filter(G, Kc, y) + filter(Fhat, 1, u);
+yhat = yhat(100:end);
+res = y(100:end) - yhat;
 
+var(res)
+
+figure()
+subplot(211)
+hold on
+plot(yhat+m_y, "--k");
+plot(y(100:end)+m_y, "b");
+legend("Predicted load", "True load")
+title("Predicted vs. actual load")
+subplot(212)
+plot(res)
+title("Prediction errors")
+
+%% Prediction with k=8
+
+load validation_data.mat
+
+y = validation_data(:,1) - m_y;
+u = validation_data(:,2) - m_u;
+model = MboxJ;
+
+k = 8;
+
+Ka = conv(model.D, model.F);
+Kb = conv(model.D, model.B);
+Kc = conv(model.F, model.C);
+
+[F, G] = polydiv(Kc, Ka, k);
+BF = conv(Kb, F);
+[Fhat, Ghat] = polydiv(BF, Kc, k);
+
+yhat = filter(Ghat, Kc, u) + filter(G, Kc, y) + filter(Fhat, 1, u);
+yhat = yhat(100:end);
+res = y(100:end) - yhat;
+
+var(res)
+
+figure()
+subplot(211)
+hold on
+plot(yhat+m_y, "--k");
+plot(y(100:end)+m_y, "b");
+legend("Predicted load", "True load")
+title("Predicted vs. actual load")
+subplot(212)
+plot(res)
+title("Prediction errors")
+
+%% Predicting with k=6 on test_data1
+
+load test_data1.mat
+
+y = test_data1(:,1) - m_y;
+u = test_data1(:,2) - m_u;
+model = MboxJ;
+
+k = 6;
+
+Ka = conv(model.D, model.F);
+Kb = conv(model.D, model.B);
+Kc = conv(model.F, model.C);
+
+[F, G] = polydiv(Kc, Ka, k);
+BF = conv(Kb, F);
+[Fhat, Ghat] = polydiv(BF, Kc, k);
+
+yhat = filter(Ghat, Kc, u) + filter(G, Kc, y) + filter(Fhat, 1, u);
+yhat = yhat(100:end);
+res = y(100:end) - yhat;
+
+var(res)
+
+figure()
+subplot(211)
+hold on
+plot(yhat+m_y, "--k");
+plot(y(100:end)+m_y, "b");
+legend("Predicted load", "True load")
+title("Predicted vs. actual load")
+subplot(212)
+plot(res)
+title("Prediction errors")
+
+%% Predicting with k=6 on test_data2
+
+load test_data2.mat
+
+y = test_data2(:,1) - m_y;
+u = test_data2(:,2) - m_u;
+model = MboxJ;
+
+k = 6;
+
+Ka = conv(model.D, model.F);
+Kb = conv(model.D, model.B);
+Kc = conv(model.F, model.C);
+
+[F, G] = polydiv(Kc, Ka, k);
+BF = conv(Kb, F);
+[Fhat, Ghat] = polydiv(BF, Kc, k);
+
+yhat = filter(Ghat, Kc, u) + filter(G, Kc, y) + filter(Fhat, 1, u);
+yhat = yhat(100:end);
+res = y(100:end) - yhat;
+
+var(res)
+
+figure()
+subplot(211)
+hold on
+plot(yhat+m_y, "--k");
+plot(y(100:end)+m_y, "b");
+legend("Predicted load", "True load")
+title("Predicted vs. actual load")
+subplot(212)
+plot(res)
+title("Prediction errors")
