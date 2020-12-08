@@ -32,7 +32,7 @@ week  = 24*7;
 
 % Train data 
 %start_train = 32; end_train = start_train + 10*week-1; GAMMAL
-start_train = 32; end_train = start_train + 8*week-1;
+start_train = 4000; end_train = start_train + 8*week-1;
 train_data = district_heat(start_train:end_train, 2:end); % 8th of July - 15th of September (1989)
 
 % Validation data
