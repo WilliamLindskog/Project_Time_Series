@@ -59,8 +59,8 @@ clear district_heat
 
 %% Saving data series
 
-save date
-save train_data
-save validation_data
-save test_data1
-save test_data2
+save('date.mat','date')
+save('train_data.mat','train_data')
+save('validation_data.mat','validation_data')
+save('test_data1.mat','test_data1')
+save('test_data2.mat','test_data2')
