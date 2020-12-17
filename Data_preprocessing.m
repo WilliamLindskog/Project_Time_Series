@@ -38,21 +38,26 @@ train_data = district_heat(start_train:end_train, 2:end); % 8th of July - 15th o
 % Validation data
 %start_validation = end_train + 1; end_validation = start_validation +
 %2*week-1; GAMMAL
-start_validation = end_train + 1 - 100; end_validation = start_validation + 2*week-1;
+start_validation = end_train + 1 - 100; end_validation = start_validation +100 + 2*week-1;
 validation_data = district_heat(start_validation:end_validation, 2:end);  % 16th of September - 29th of September (1989)
 
-% Test data set 1 & 2
-start_test1 = end_validation + 1 - 100; end_test1 = start_test1 + week-1;
+% Test data set 1
+start_test1 = end_validation + 1 - 100; end_test1 = start_test1 + 100 + week-1;
 test_data1 = district_heat(start_test1:end_test1, 2:end);  % 23 of September - 29th of September (1989) 
 
-start_test2 = 132 - 100; end_test2 = start_test2 + week-1;
-test_data2 = district_heat(start_test2:end_test2, 2:end); % 3rd of February - 10th of February (1990)
+% Training data and test data 2
+start_train2 = 1; end_train2 = start_train2 + 8*week-1;
+train_data2 = district_heat(start_train2:end_train2, 2:end);
+
+start_test2 = end_train2 + 1 - 100; end_test2 = start_test2 + 100 + week-1;
+test_data2 = district_heat(start_test2:end_test2, 2:end); 
 
 %% Plot data splits
 
 data_plot(date(start_train:end_train,1), train_data, 'Train data');
 data_plot(date(start_validation:end_validation,1), validation_data, 'Validation data');
 data_plot(date(start_test1:end_test1,1), test_data1,'First test data set');
+data_plot(date(start_train2:end_train2,1), train_data2, 'Train data 2');
 data_plot(date(start_test2:end_test2,1), test_data2,'Second test data set');
 
 clear district_heat
@@ -63,4 +68,5 @@ save('date.mat','date')
 save('train_data.mat','train_data')
 save('validation_data.mat','validation_data')
 save('test_data1.mat','test_data1')
+save('train_data2.mat', 'train_data2')
 save('test_data2.mat','test_data2')
