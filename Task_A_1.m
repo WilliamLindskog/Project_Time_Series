@@ -11,17 +11,18 @@ u = train_data(:,2);
 m_u = mean(u);
 u = u - mean(u);
 
-clearvars -except y m_y u m_u
+clearvars -except y m_y u m_u date
 
-figure("Name","Input and output data (mean subtracted)")
+figure("Name","Input and output data")
 subplot(211)
-plot(y)
+plot(y+m_y)
+title("")
 subplot(212)
-plot(u)
+plot(u+m_u)
 
 %% Modeling the input
 
-basicIdentification(u,200,0.05);
+basicIdentification(u,50,0.05);
 
 %% Modeling the input: ARMA model with seasonal component
 
@@ -34,10 +35,10 @@ model_input_init.Structure.A.Free = [0 1 1 zeros(1,20) 1 0 1];
 model_input = pem(u, model_input_init);
 rar = resid(u, model_input);
 
-basicIdentification(rar.OutputData, 200, 0.05)
+basicIdentification(rar.OutputData, 50, 0.05)
 present(model_input)
 figure()
-whitenessTest(rar.OutputData, 0.05, 200)
+whitenessTest(rar.OutputData)
 
 %% Pre-whitening
 A3 = model_input.A;
@@ -48,7 +49,7 @@ y_pw = modFilter(A3, C3, y);
 
 %% CCF From upw to ypw
 
-plotCCF(u_pw, y_pw, 200);
+plotCCF(u_pw, y_pw, 50);
 
 %% Model estimation for the input part (A2, A3, B, C3)
 
